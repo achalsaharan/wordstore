@@ -13,6 +13,7 @@ import Chip from '@material-ui/core/Chip';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import { ListItemText, ListItemSecondaryAction } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 //icons
 import SearchIcon from '@material-ui/icons/Search';
@@ -68,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
     },
+    loadingAnimation: {
+        marginTop: theme.spacing(16),
+    },
 }));
 
 const WordList = () => {
@@ -76,6 +80,7 @@ const WordList = () => {
     const [search, setSearch] = useState('');
     const [searchResult, setSearchResult] = useState(null);
     const [list, setList] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const userContext = useContext(UserContext);
 
@@ -86,6 +91,7 @@ const WordList = () => {
 
     useEffect(() => {
         console.log('useEffect start');
+        setLoading(true);
         db.collection('words')
             .where('userUid', '==', userContext.user.uid)
             .orderBy('created')
@@ -100,6 +106,7 @@ const WordList = () => {
                     // console.log('list: ', list);
                     fetchedResult.push(doc.data().word);
                 });
+                setLoading(false);
                 setList(fetchedResult.reverse());
                 console.log('list final: ', list);
             })
@@ -289,6 +296,14 @@ const WordList = () => {
                     </Paper>
                 ) : // end search result section
                 null}
+
+                {/* conditionally rending the loading animation */}
+                {loading ? (
+                    <CircularProgress
+                        color="secondary"
+                        className={classes.loadingAnimation}
+                    />
+                ) : null}
 
                 {/* conditionally rending the list  */}
                 {list.length !== 0 ? (

@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Redirect } from 'react-router-dom';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { Link as RouterLink } from 'react-router-dom';
 import UserContext from '../context/UserContext';
@@ -37,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 }));
 
 export default function SignIn() {
@@ -46,10 +52,15 @@ export default function SignIn() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [open, setOpen] = useState(false);
 
     const signIn = () => {
+        //to start loading
+        setOpen(true);
         auth.signInWithEmailAndPassword(email, password)
             .then((res) => {
+                // to end loading
+                setOpen(false);
                 console.log(res);
                 context.setUser({ email: res.user.email, uid: res.user.uid });
                 toast.success('signed in successfully', {
@@ -58,6 +69,8 @@ export default function SignIn() {
                 });
             })
             .catch((err) => {
+                // to end loading
+                setOpen(false);
                 console.log(err);
                 toast.error(err.message, {
                     hideProgressBar: true,
@@ -77,6 +90,11 @@ export default function SignIn() {
 
     return (
         <Container component="main" maxWidth="xs">
+            {/* backdrop signin animation */}
+            <Backdrop className={classes.backdrop} open={open}>
+                <CircularProgress color="secondary" />
+            </Backdrop>
+
             <CssBaseline />
             <ToastContainer />
             <div className={classes.paper}>

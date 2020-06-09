@@ -9,6 +9,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 //react router
 import { Link as RouterLink } from 'react-router-dom';
@@ -41,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 }));
 
 export default function SignUp() {
@@ -51,18 +57,25 @@ export default function SignUp() {
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [open, setOpen] = useState(false);
 
     const handleSignUp = () => {
+        //to start loading
+        setOpen(true);
         auth.createUserWithEmailAndPassword(email, password)
             .then((res) => {
                 console.log(res);
                 context.setUser({ email: res.user.email, uid: res.user.uid });
+                // to end loading
+                setOpen(false);
                 toast.success('signed up successfully', {
                     hideProgressBar: true,
                     autoClose: 4000,
                 });
             })
             .catch((err) => {
+                // to end loading
+                setOpen(false);
                 console.log('error in signing up user ', err);
                 toast.error(err.message, {
                     hideProgressBar: true,
@@ -83,6 +96,11 @@ export default function SignUp() {
 
     return (
         <Container component="main" maxWidth="xs">
+            {/* backdrop signin animation */}
+            <Backdrop className={classes.backdrop} open={open}>
+                <CircularProgress color="secondary" />
+            </Backdrop>
+
             <ToastContainer />
             <CssBaseline />
             <div className={classes.paper}>
