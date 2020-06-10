@@ -13,6 +13,10 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 //context
 import UserContext from './context/UserContext';
 
+//material ui theme
+import { ThemeProvider } from '@material-ui/core/styles';
+import theme from './materialUi/theme';
+
 //~desc (FIREBASE STUFF) implemented this in seperate file
 // //firebase
 // import firebase from 'firebase/app';
@@ -30,20 +34,22 @@ const App = () => {
 
     return (
         <Router>
-            <UserContext.Provider
-                value={{
-                    user,
-                    setUser,
-                }}
-            >
-                <TopBar />
-                <Switch>
-                    <Route exact path="/" component={About} />
-                    <Route exact path="/wordlist" component={WordList} />
-                    <Route exact path="/signin" component={SignIn} />
-                    <Route exact path="/signup" component={SignUp} />
-                </Switch>
-            </UserContext.Provider>
+            <ThemeProvider theme={theme}>
+                <UserContext.Provider
+                    value={{
+                        user,
+                        setUser,
+                    }}
+                >
+                    <TopBar />
+                    <Switch>
+                        <Route exact path="/" component={About} />
+                        <Route exact path="/wordlist" component={WordList} />
+                        <Route exact path="/signin" component={SignIn} />
+                        <Route exact path="/signup" component={SignUp} />
+                    </Switch>
+                </UserContext.Provider>
+            </ThemeProvider>
         </Router>
     );
 };

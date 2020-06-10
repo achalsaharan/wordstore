@@ -61,9 +61,11 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         backgroundColor: '#ddd',
         borderRadius: '4px',
-        marginBottom: '50px',
+        marginBottom: '25px',
         display: 'flex',
         flexDirection: 'column',
+        maxHeight: '450px',
+        overflow: 'auto',
     },
     listItem: {
         display: 'flex',
@@ -71,6 +73,10 @@ const useStyles = makeStyles((theme) => ({
     },
     loadingAnimation: {
         marginTop: theme.spacing(16),
+    },
+    SearchLoadingAnimation: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
     },
 }));
 
@@ -81,6 +87,7 @@ const WordList = () => {
     const [searchResult, setSearchResult] = useState(null);
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loadingSearch, setLoadingSearch] = useState(false);
 
     const userContext = useContext(UserContext);
 
@@ -92,6 +99,10 @@ const WordList = () => {
     useEffect(() => {
         console.log('useEffect start');
         setLoading(true);
+        if (userContext.user === null) {
+            return;
+        }
+
         db.collection('words')
             .where('userUid', '==', userContext.user.uid)
             .orderBy('created')
@@ -114,6 +125,10 @@ const WordList = () => {
 
         console.log('useEffect end');
     }, []);
+
+    if (userContext.user === null) {
+        return <Redirect to="/" />;
+    }
 
     const addToDB = (word) => {
         const userUid = userContext.user.uid;
@@ -145,10 +160,12 @@ const WordList = () => {
 
     const searchWord = async (e) => {
         e.preventDefault();
+        setLoadingSearch(true);
         try {
             const res = await Axios.get(
                 `https://api.dictionaryapi.dev/api/v2/entries/en/${search}`
             );
+            setLoadingSearch(false);
             // console.log('word: ', res.data[0].word);
             // console.log('partOfSpeech: ', res.data[0].meanings[0].partOfSpeech);
             // console.log('meaning: ', res.data[0].meanings[0].definitions[0].definition);
@@ -160,8 +177,12 @@ const WordList = () => {
                 meaning: res.data[0].meanings[0].definitions[0].definition,
                 example: res.data[0].meanings[0].definitions[0].example,
             };
+            if (word.example === undefined) {
+                word.example = 'example not avaliable';
+            }
             setSearchResult(word);
         } catch (error) {
+            setLoadingSearch(false);
             toast.error('No words found, try rechecking the spelling. ', {
                 hideProgressBar: true,
                 autoClose: 4000,
@@ -185,7 +206,6 @@ const WordList = () => {
 
         if (duplicate === false) {
             setList([word, ...list]);
-            //TODO this is where we add the word to the database
             addToDB(word);
         }
 
@@ -219,8 +239,9 @@ const WordList = () => {
                             <TextField
                                 variant="outlined"
                                 fullWidth
-                                id="email"
+                                id="word"
                                 label="search word"
+                                autoComplete="off"
                                 onChange={(e) => setSearch(e.target.value)}
                                 value={search}
                             />
@@ -233,12 +254,23 @@ const WordList = () => {
                                 color="primary"
                                 className={classes.submit}
                             >
-                                search
+                                <Typography color="textSecondary">
+                                    search
+                                </Typography>
+
                                 <SearchIcon />
                             </Button>
                         </Grid>
                     </Grid>
                 </form>
+
+                {/* conditionally rending search result fetch */}
+                {loadingSearch ? (
+                    <CircularProgress
+                        color="secondary"
+                        className={classes.SearchLoadingAnimation}
+                    />
+                ) : null}
 
                 {/* // search result section */}
                 {searchResult ? (
@@ -253,10 +285,9 @@ const WordList = () => {
                             {/* word searched for */}
                             {searchResult.word}
                             <Chip
-                                variant="outlined"
                                 onClick={() => addToList(searchResult)}
                                 label="Add Word"
-                                color="primary"
+                                color="secondary"
                                 icon={<AddCircleIcon />}
                                 style={{
                                     float: 'right',

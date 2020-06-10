@@ -21,10 +21,13 @@ import { Link as RouterLink } from 'react-router-dom';
 
 //firebase
 import firebase from 'firebase/app';
+import theme from '../materialUi/theme';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        backgroundColor: theme.palette.primary.main,
+        // backgroundColor: theme.palette.type,
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -61,12 +64,16 @@ const TopBar = () => {
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography
+                        variant="h6"
+                        className={classes.title}
+                        color="textPrimary"
+                    >
                         WORDS
                     </Typography>
                     {userContext.user ? (
                         <React.Fragment>
-                            <Typography>
+                            <Typography color="textPrimary">
                                 {userContext.user.email.split('@')[0]}
                             </Typography>
                             <div>
@@ -103,9 +110,11 @@ const TopBar = () => {
                                             {' '}
                                             <InfoIcon
                                                 style={{ marginRight: '3px' }}
-                                                color="primary"
+                                                color="secondary"
                                             />{' '}
-                                            About{' '}
+                                            <Typography color="textPrimary">
+                                                About
+                                            </Typography>
                                         </MenuItem>{' '}
                                     </RouterLink>
                                     <RouterLink
@@ -113,22 +122,24 @@ const TopBar = () => {
                                         to="/wordlist"
                                     >
                                         <MenuItem>
-                                            {' '}
                                             <ListIcon
                                                 style={{ marginRight: '3px' }}
-                                                color="primary"
-                                            />{' '}
-                                            Word List{' '}
-                                        </MenuItem>{' '}
+                                                color="secondary"
+                                            />
+                                            <Typography color="textPrimary">
+                                                Word List
+                                            </Typography>
+                                        </MenuItem>
                                     </RouterLink>
                                     <MenuItem onClick={logout}>
-                                        {' '}
                                         <ExitToAppIcon
                                             style={{ marginRight: '3px' }}
                                             color="secondary"
-                                        />{' '}
-                                        Logout{' '}
-                                    </MenuItem>{' '}
+                                        />
+                                        <Typography color="textPrimary">
+                                            Logout
+                                        </Typography>
+                                    </MenuItem>
                                 </Menu>
                             </div>
                         </React.Fragment>
@@ -141,7 +152,9 @@ const TopBar = () => {
                                     textDecoration: 'inherit',
                                 }}
                             >
-                                Sign In
+                                <Typography color="textPrimary">
+                                    Sign In
+                                </Typography>
                             </RouterLink>
                         </Typography>
                     )}

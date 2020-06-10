@@ -151,6 +151,7 @@ export default function SignIn() {
                                 component={RouterLink}
                                 to="signup"
                                 variant="body2"
+                                color="secondary"
                             >
                                 Don't have an account, Sign Up
                             </Link>
