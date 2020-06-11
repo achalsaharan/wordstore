@@ -1,7 +1,7 @@
 # WORDS
 
-A web app that lets user search for words and store their meanings for future reference all at one place
-
+A web app that lets user search for words and store their meanings for future reference all at one place.<br>
+Built with `react` `firebase` and `material ui`
 
 Main Page | About Page
 :-------------------------:|:---------------------------
