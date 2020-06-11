@@ -1,5 +1,16 @@
 # WORDS
 
+A web app that lets user search for words and store their meanings for future reference all at one place
+
+
+Main Page | About Page
+:-------------------------:|:---------------------------
+![](https://github.com/achalsaharan/wordstore/blob/master/display3.png)  | ![](https://github.com/achalsaharan/wordstore/blob/master/display1.png)
+     
+Sign Up | Sign In
+:-------------------------:|:---------------------------
+![](https://github.com/achalsaharan/wordstore/blob/master/display2.png)  | ![](https://github.com/achalsaharan/wordstore/blob/master/display4.png)
+
 ### `npm install`
 installs all the dependencies
 
