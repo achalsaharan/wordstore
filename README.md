@@ -11,6 +11,8 @@ Sign Up | Sign In
 :-------------------------:|:---------------------------
 ![](https://github.com/achalsaharan/wordstore/blob/master/display2.png)  | ![](https://github.com/achalsaharan/wordstore/blob/master/display4.png)
 
+## How To Run
+
 ### `npm install`
 installs all the dependencies
 
