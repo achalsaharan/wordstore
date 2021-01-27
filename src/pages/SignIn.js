@@ -55,12 +55,10 @@ export default function SignIn() {
     const [open, setOpen] = useState(false);
 
     const signIn = () => {
-        //to start loading
-        setOpen(true);
+        setOpen(true); //to start loading
         auth.signInWithEmailAndPassword(email, password)
             .then((res) => {
-                // to end loading
-                setOpen(false);
+                setOpen(false); // to end loading
                 console.log(res);
                 context.setUser({ email: res.user.email, uid: res.user.uid });
                 toast.success('signed in successfully', {
@@ -69,8 +67,7 @@ export default function SignIn() {
                 });
             })
             .catch((err) => {
-                // to end loading
-                setOpen(false);
+                setOpen(false); // to end loading
                 console.log(err);
                 toast.error(err.message, {
                     hideProgressBar: true,
